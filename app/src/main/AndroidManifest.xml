@@ -19,11 +19,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".Updates"
             android:label="@string/title_activity_updates"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".FixturesActivity"
+            android:label="@string/title_activity_fixtures"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

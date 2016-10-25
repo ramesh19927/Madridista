@@ -27,7 +27,7 @@ import java.util.Calendar;
 import  com.example.ramesh_pc.madridista.Object;
 public class MainActivity extends AppCompatActivity {
     Button b1;public static int SECONDS_IN_A_DAY = 24 * 60 * 60;
-
+    Button b2;
     CountDownTimer countDownTimer;
     private ProgressBar spinner;
     TextView textView;
@@ -58,30 +58,30 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
             b1 = (Button) findViewById(R.id.button);
-            //spinner = (ProgressBar) findViewById(R.id.progressBar);
+        b2 = (Button) findViewById(R.id.button1);
+
+        //spinner = (ProgressBar) findViewById(R.id.progressBar);
            // spinner.setVisibility(View.GONE);
          textView1= (TextView) findViewById(R.id.textview);
         textView=(TextView)findViewById(R.id.textView);
        new ProgressTask().execute();
       copyright=(TextView)findViewById(R.id.copyright);
-       copyright.setText( "Venkat Ramesh Gali "+"\u00a9" );
+       copyright.setText( "Ramesh Gali"+"\u00a9" );
         copyright.setTextColor(Color.BLACK);
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                    startTimer(23);
-//                   try{
-//                       textView1.setText(getAllOpponents());
-//
-//                   }catch (Exception e){
-//                      e.printStackTrace();
-//                       Log.i("LOGGED",e.toString());
-//                  }
-
                 startActivity(new Intent(MainActivity.this, Updates.class));
             }
         });
 
+        b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("hello logs","Im in fixtures");
+                startActivity(new Intent(MainActivity.this, FixturesActivity.class));
+            }
+        });
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
