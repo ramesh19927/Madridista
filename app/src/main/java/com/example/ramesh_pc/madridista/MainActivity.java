@@ -1,5 +1,6 @@
 package com.example.ramesh_pc.madridista;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -73,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
 //                      e.printStackTrace();
 //                       Log.i("LOGGED",e.toString());
 //                  }
+
+                startActivity(new Intent(MainActivity.this,Updates.class));
             }
         });
 
