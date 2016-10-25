@@ -24,20 +24,29 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import  com.example.ramesh_pc.madridista.Object;
 public class MainActivity extends AppCompatActivity {
-    Button b1;
+    Button b1;public static int SECONDS_IN_A_DAY = 24 * 60 * 60;
+
     CountDownTimer countDownTimer;
     private ProgressBar spinner;
     TextView textView;
     TextView textView1;
+    static Calendar c= Calendar.getInstance();
+
+    static  int currsec=c.get(Calendar.SECOND);
+
+    static  int currmin=c.get(Calendar.MINUTE);
+
+    static  int currhour=c.get(Calendar.HOUR);
+
+    static  int currmon=c.get(Calendar.MONTH)+1;
+    static  int curryear=c.get(Calendar.YEAR);
+    static  int currday=c.get(Calendar.DATE);
+
+    static int matchDay=0;
+    static int matchMonth=0;
+    static int matchYear=0;
     CountDownTimer mCountDownTimer;
-    long mInitialTime = DateUtils.DAY_IN_MILLIS * 0+
-            DateUtils.HOUR_IN_MILLIS * 0 +
-            DateUtils.MINUTE_IN_MILLIS * 0 +
-            DateUtils.SECOND_IN_MILLIS * 20;
-    StringBuilder time = new StringBuilder();
-     static Calendar c=Calendar.getInstance();
-     static int  currmin; static int  currsec;
-    static int  currhour;
+     StringBuilder time = new StringBuilder();
 
     @Override
 
@@ -101,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         int min;
         int hour;
         int result;
+
         @Override
         protected Object doInBackground(Void... arg0) {
             try{
@@ -114,12 +124,30 @@ public class MainActivity extends AppCompatActivity {
                     s=getAllTimes().get(0).replaceAll("\\s", "").replaceAll(":", "").replaceAll("A", "").replaceAll("P", "").replaceAll("M", "");
                     l=Integer.valueOf(s);
                 }
-                Calendar c=Calendar.getInstance();
-                min=c.get(Calendar.MINUTE);
-                hour=c.get(Calendar.HOUR);
-                result=hour*100+min;
-                list.add(l-result);
+                ArrayList<Integer> timelist= new ArrayList<>(TimeLeft(getAllDates().get(0)));
+
+
+                Calendar thatDay = Calendar.getInstance();
+                thatDay.set(Calendar.MINUTE,l%100);
+                thatDay.set(Calendar.HOUR_OF_DAY,l/100);
+                thatDay.set(Calendar.DAY_OF_MONTH,timelist.get(0));
+                thatDay.set(Calendar.MONTH,timelist.get(1)-1); // 0-11 so 1 less
+                thatDay.set(Calendar.YEAR, timelist.get(2));
+
+                Calendar today = Calendar.getInstance();
+                long diff =  thatDay.getTimeInMillis() - today.getTimeInMillis();
+                long diffSec = diff / 1000;
+
+                long days = diffSec / SECONDS_IN_A_DAY;
+                long secondsDay = diffSec % SECONDS_IN_A_DAY;
+                long seconds = secondsDay % 60;
+                long minutes = (secondsDay / 60) % 60;
+                long hours = (secondsDay / 3600); // % 24 not needed
+
+            list.add((int)days);list.add((int)seconds);list.add((int) minutes);list.add((int)hours);
                 object.setId(list);
+
+                Log.i("logged",list.get(0)+" "+list.get(1)+" "+list.get(2)+" "+list.get(3)+" ");
 
 
             }
@@ -132,6 +160,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object object) {
             spinner.setVisibility(View.GONE);
+            list.addAll(object.getTime());
+            long mInitialTime = DateUtils.DAY_IN_MILLIS * list.get(0)+
+                    DateUtils.HOUR_IN_MILLIS * list.get(3) +
+                    DateUtils.MINUTE_IN_MILLIS * list.get(2)+
+                    DateUtils.SECOND_IN_MILLIS * list.get(1);
 
             stringres=object.getName();
             mCountDownTimer = new CountDownTimer(mInitialTime, 1000) {
@@ -187,9 +220,6 @@ public class MainActivity extends AppCompatActivity {
             //System.out.println(h111.get(j).text());
             dates.add(h111.get(j).text());
         }
-        currmin = c.get(Calendar.MINUTE);
-        currhour=c.get(Calendar.HOUR);
-        currsec=c.get(Calendar.SECOND);
 
 
         return dates;
@@ -210,5 +240,52 @@ public class MainActivity extends AppCompatActivity {
         return dates.get(0);
     }
 
+    public static ArrayList<Integer> TimeLeft(String s){
+        s.replaceAll("\\s", "");
+
+        String[] parts=s.split(",");
+        //String part=parts[0];
+        String part1=parts[1];
+        String part2=parts[2];
+        matchYear=(int)Integer.parseInt(part2.replaceAll("\\s+",""));
+        if(part1.contains("January")){
+            matchMonth=1;
+        }if(part1.contains("February")){
+            matchMonth=2;
+        }if(part1.contains("March")){
+            matchMonth=3;
+        }if(part1.contains("April")){
+            matchMonth=4;
+        }if(part1.contains("May")){
+            matchMonth=5;
+        }if(part1.contains("June")){
+            matchMonth=6;
+        }if(part1.contains("July")){
+            matchMonth=7;
+        }if(part1.contains("August")){
+            matchMonth=8;
+        }if(part1.contains("September")){
+            matchMonth=9;
+        }if(part1.contains("October")){
+            matchMonth=10;
+        }if(part1.contains("November")){
+            matchMonth=11;
+        }if(part1.contains("December")){
+            matchMonth=12;
+        }
+        StringBuffer buf= new StringBuffer();
+        for(int i=0;i<part1.length();i++){
+            if(part1.charAt(i)=='0'||part1.charAt(i)=='2'||part1.charAt(i)=='3'||
+                    part1.charAt(i)=='4'||part1.charAt(i)=='5'||part1.charAt(i)=='6'||
+                    part1.charAt(i)=='7'||part1.charAt(i)=='8'||part1.charAt(i)=='9'||
+                    part1.charAt(i)=='1'){
+                buf.append(part1.charAt(i));
+            }
+        }
+        matchDay=Integer.valueOf(buf.toString());
+       ArrayList<Integer> list= new ArrayList<>();
+        list.add(matchDay);list.add(matchMonth);list.add(matchYear);
+         return list;
+    }
 
 }
