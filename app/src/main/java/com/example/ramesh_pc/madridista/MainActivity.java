@@ -1,6 +1,7 @@
 package com.example.ramesh_pc.madridista;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar spinner;
     TextView textView;
     TextView textView1;
+    TextView copyright;
     static Calendar c= Calendar.getInstance();
 
     static  int currsec=c.get(Calendar.SECOND);
@@ -56,13 +58,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
             b1 = (Button) findViewById(R.id.button);
-            spinner = (ProgressBar) findViewById(R.id.progressBar);
-            spinner.setVisibility(View.GONE);
+            //spinner = (ProgressBar) findViewById(R.id.progressBar);
+           // spinner.setVisibility(View.GONE);
          textView1= (TextView) findViewById(R.id.textview);
         textView=(TextView)findViewById(R.id.textView);
        new ProgressTask().execute();
-
-
+      copyright=(TextView)findViewById(R.id.copyright);
+       copyright.setText( "Venkat Ramesh Gali "+"\u00a9" );
+        copyright.setTextColor(Color.BLACK);
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 //                       Log.i("LOGGED",e.toString());
 //                  }
 
-                startActivity(new Intent(MainActivity.this,Updates.class));
+                startActivity(new Intent(MainActivity.this, Updates.class));
             }
         });
 
@@ -162,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Object object) {
-            spinner.setVisibility(View.GONE);
+            //spinner.setVisibility(View.GONE);
             list.addAll(object.getTime());
             long mInitialTime = DateUtils.DAY_IN_MILLIS * list.get(0)+
                     DateUtils.HOUR_IN_MILLIS * list.get(3) +
