@@ -27,6 +27,10 @@
         <activity
             android:name=".FixturesActivity"
             android:label="@string/title_activity_fixtures"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".TableActivity"
+            android:label="@string/title_activity_table"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

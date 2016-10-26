@@ -32,6 +32,13 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Table"
+        android:id="@+id/button2"
+        android:layout_below="@+id/imageView"
+        android:layout_centerHorizontal="true" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Fixtures"
         android:id="@+id/button1"
         android:layout_below="@+id/imageView"

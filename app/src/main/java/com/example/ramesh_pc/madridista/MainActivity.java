@@ -27,7 +27,7 @@ import java.util.Calendar;
 import  com.example.ramesh_pc.madridista.Object;
 public class MainActivity extends AppCompatActivity {
     Button b1;public static int SECONDS_IN_A_DAY = 24 * 60 * 60;
-    Button b2;
+    Button b2; Button b3;
     CountDownTimer countDownTimer;
     private ProgressBar spinner;
     TextView textView;
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
             b1 = (Button) findViewById(R.id.button);
         b2 = (Button) findViewById(R.id.button1);
-
+         b3=(Button) findViewById(R.id.button2);
         //spinner = (ProgressBar) findViewById(R.id.progressBar);
            // spinner.setVisibility(View.GONE);
          textView1= (TextView) findViewById(R.id.textview);
@@ -80,6 +80,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i("hello logs","Im in fixtures");
                 startActivity(new Intent(MainActivity.this, FixturesActivity.class));
+            }
+        });
+        b3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, TableActivity.class));
+
             }
         });
     }
