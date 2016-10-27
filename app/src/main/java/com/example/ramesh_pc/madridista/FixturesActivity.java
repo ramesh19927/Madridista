@@ -15,12 +15,14 @@ import android.widget.TextView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 
 public class FixturesActivity extends AppCompatActivity {
   static  String URL="http://www.goal.com/en-us/fixtures/team/real-madrid/2016?ICID=TP_NMW_FT_1";
+  static  String url="http://www.soccer24.com/team/real-madrid/W8mj7MDD/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +43,11 @@ public class FixturesActivity extends AppCompatActivity {
            ArrayList<String> opponents= new ArrayList<>(getAllOpponents(URL));
            ArrayList<String >dates= new ArrayList<>(getAllDates(URL));
            ArrayList<String> times = new ArrayList<>(getAllTimes(URL));
+                ArrayList<String> players= new ArrayList<>(InjuredPlayersList(url));
                 list.add(opponents);
-
                 list.add(dates);
                 list.add(times);
+                list.add(players);
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -57,6 +60,36 @@ public class FixturesActivity extends AppCompatActivity {
             Log.i("hello logs",N+" is the size");
             LinearLayout linearLayout = (LinearLayout)findViewById(R.id.info);
             final TextView[] myTextViews = new TextView[N]; // create an empty array;
+            final int M= list.get(3).size();
+            final TextView[] newTextViews= new TextView[M];
+            TextView rowText1 = new TextView(getApplicationContext());
+            rowText1.setText("----PLAYERS NOT AVAILABLE---- ");
+            rowText1.setTextColor(Color.RED);
+            linearLayout.addView(rowText1);
+
+
+            for (int i = 0; i < M; i++) {
+                // create a new textview
+                final TextView rowText = new TextView(getApplicationContext());
+
+                // set some properties of rowTextView or something
+
+                rowText.setText(i + 1 + " :: " + list.get(3).get(i));
+
+                rowText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                rowText.setTextColor(Color.BLACK);
+
+                // add the textview to the linearlayout
+                linearLayout.addView(rowText);
+
+                // save a reference to the textview for later
+                myTextViews[i] = rowText;
+            }
+            TextView rowText2 = new TextView(getApplicationContext());
+            rowText2.setText("-------FIXRURES------ ");
+            rowText2.setTextColor(Color.RED);
+            linearLayout.addView(rowText2);
+
 
             for (int i = 0; i < N; i++) {
                 // create a new textview
@@ -75,6 +108,21 @@ public class FixturesActivity extends AppCompatActivity {
                 myTextViews[i] = rowTextView;
             }
         }
+    }
+
+    public static  ArrayList<String> InjuredPlayersList(String URL) throws  Exception{
+        Document doc = Jsoup.connect(URL).get();
+        Element h=doc.body();
+        //Elements h1 = doc.body().getElementsByClass("").tagName("goles");
+        ArrayList<String> list= new ArrayList<>();
+        //for(int i=0;i<h1.size();i++){
+        //list.add(h1.get(i).text());
+        //}
+        Elements h11 = doc.body().getElementsByClass("player-name");//.get(0).getElementsByClass("player");
+        for(Element el:h11)
+            if(el.getElementsByTag("span").size()>1)
+                list.add(el.text());
+        return  list;
     }
     public static ArrayList<String> getAllOpponents(String URL) throws Exception{
         Document doc = Jsoup.connect(URL).get();
