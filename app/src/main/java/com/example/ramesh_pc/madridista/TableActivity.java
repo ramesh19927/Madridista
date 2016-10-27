@@ -1,5 +1,6 @@
 package com.example.ramesh_pc.madridista;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ public class TableActivity extends AppCompatActivity {
    static String URL="http://www.marca.com/en/stats/football/laliga/league-table.html?cid=MENUMIGA35903&s_kw=table";
     static String URL1="http://www.marca.com/en/stats/football/laliga/2016_17/ranking.html";
     static  String url="http://messivsronaldo.net/msn-vs-bbc/";
+    private  static ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +36,10 @@ public class TableActivity extends AppCompatActivity {
     private class tables extends AsyncTask<Void,Void,ArrayList<ArrayList<String>>> {
         Object object= new Object();
         ArrayList<ArrayList<String>> list= new ArrayList<>();
-
+        @Override
+        protected void onPreExecute() {
+            pd=ProgressDialog.show(TableActivity.this,"","Please Wait...Getting results!!",false);
+        }
         @Override
         protected ArrayList<ArrayList<String>> doInBackground(Void... arg0) {
             try {
@@ -54,6 +59,7 @@ public class TableActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(ArrayList<ArrayList<String>> list) {
+            pd.dismiss();
             final int N = list.get(0).size(); // total number of textviews to add
             final int M=5;
             Log.i("hello logs", N + " is the size");

@@ -1,5 +1,6 @@
 package com.example.ramesh_pc.madridista;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,7 +24,10 @@ import java.util.ArrayList;
 public class FixturesActivity extends AppCompatActivity {
   static  String URL="http://www.goal.com/en-us/fixtures/team/real-madrid/2016?ICID=TP_NMW_FT_1";
   static  String url="http://www.soccer24.com/team/real-madrid/W8mj7MDD/";
+    private static ProgressDialog dialog;
 
+    /** progress dialog to show user that the backup is processing. */
+    /** application context. */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +40,10 @@ public class FixturesActivity extends AppCompatActivity {
         Object object= new Object();
         ArrayList<ArrayList<String>> list= new ArrayList<>();
 
+        @Override
+        protected void onPreExecute() {
+            dialog=ProgressDialog.show(FixturesActivity.this,"","Please Wait...Getting results!!",false);
+        }
         @Override
         protected ArrayList<ArrayList<String>> doInBackground(Void... arg0) {
             try {
@@ -56,6 +64,7 @@ public class FixturesActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(ArrayList<ArrayList<String>> list) {
+            dialog.dismiss();
             final int N = list.get(0).size(); // total number of textviews to add
             Log.i("hello logs",N+" is the size");
             LinearLayout linearLayout = (LinearLayout)findViewById(R.id.info);

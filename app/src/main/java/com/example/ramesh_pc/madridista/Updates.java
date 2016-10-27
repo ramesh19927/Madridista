@@ -1,5 +1,6 @@
 package com.example.ramesh_pc.madridista;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import java.util.Calendar;
 
 public class Updates extends AppCompatActivity {
  static String URL1="http://www.marca.com/en";
+    private  static ProgressDialog pdi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,10 @@ public class Updates extends AppCompatActivity {
     private class news extends AsyncTask<Void,Void,ArrayList<String>> {
         Object object= new Object();
         ArrayList<String> list= new ArrayList<>();
+        @Override
+        protected void onPreExecute() {
+            pdi=ProgressDialog.show(Updates.this,"","Please Wait...Getting results!!",false);
+        }
 
         @Override
         protected ArrayList<String> doInBackground(Void... arg0) {
@@ -61,6 +67,7 @@ public class Updates extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(ArrayList<String> list) {
+            pdi.dismiss();
             final int N = list.size(); // total number of textviews to add
             LinearLayout linearLayout = (LinearLayout)findViewById(R.id.info);
             final TextView[] myTextViews = new TextView[N]; // create an empty array;
