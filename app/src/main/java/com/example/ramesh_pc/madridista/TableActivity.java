@@ -79,7 +79,7 @@ public class TableActivity extends AppCompatActivity {
 
 
                 rowTextram.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                rowTextram.setTextColor(Color.RED);
+                rowTextram.setTextColor(Color.BLACK);
 
                 // add the textview to the linearlayout
                 linearLayout.addView(rowTextram);
@@ -103,7 +103,7 @@ public class TableActivity extends AppCompatActivity {
 
 
                 rowText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                rowText.setTextColor(Color.RED);
+                rowText.setTextColor(Color.BLACK);
 
                 // add the textview to the linearlayout
                 linearLayout.addView(rowText);
@@ -139,18 +139,23 @@ public class TableActivity extends AppCompatActivity {
     public static ArrayList<String> getTable(String URL) throws Exception{
         Document doc = Jsoup.connect(URL).get();
         Elements h1 = doc.body().getElementsByClass("equipo");
+        Elements h2 = doc.body().getElementsByClass("pts");
         ArrayList<String> list= new ArrayList<>();
         for(int i=0;i<h1.size();i++){
-            list.add(h1.get(i).text());
+
+            list.add(h1.get(i).text()+"-----"+h2.get(i+1).text());
         }
+
         return list;
     }
     public static ArrayList<String> getScorers(String URL) throws Exception{
         Document doc = Jsoup.connect(URL).get();
         Elements h1 = doc.body().getElementsByClass("nombre");
+        Elements h11 = doc.body().getElementsByClass("destacado");
+
         ArrayList<String> list= new ArrayList<>();
         for(int i=1;i<10;i++){
-            list.add(h1.get(i).text());
+            list.add(h1.get(i).text()+"----"+h11.get(i-1).text());
         }
         return list;
     }
