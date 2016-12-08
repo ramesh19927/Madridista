@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -24,7 +25,6 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import  com.example.ramesh_pc.madridista.Object;
 public class MainActivity extends AppCompatActivity {
     Button b1;public static int SECONDS_IN_A_DAY = 24 * 60 * 60;
     Button b2; Button b3;
@@ -50,13 +50,28 @@ public class MainActivity extends AppCompatActivity {
     static int matchYear=0;
     CountDownTimer mCountDownTimer;
      StringBuilder time = new StringBuilder();
-
+ static  String URL="";
+    static ImageView imageView;
     @Override
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Intent intent = getIntent();
+         URL = intent.getExtras().getString("epuzzle");
+imageView=(ImageView)findViewById(R.id.imageView);
+        if(URL.contains("barcelona")){
+            imageView.setImageResource(R.drawable.barca);
+        } if(URL.contains("liverpool")){
+            imageView.setImageResource(R.drawable.liverpool);
 
+        } if(URL.contains("atl%C3%A9tico-madrid")){
+            imageView.setImageResource(R.drawable.atletico);
+
+        } if(URL.contains("real-madrid")){
+            imageView.setImageResource(R.drawable.real);
+
+        }
             b1 = (Button) findViewById(R.id.button);
         b2 = (Button) findViewById(R.id.button1);
          b3=(Button) findViewById(R.id.button2);
@@ -66,8 +81,12 @@ public class MainActivity extends AppCompatActivity {
         textView=(TextView)findViewById(R.id.textView);
        new ProgressTask().execute();
       copyright=(TextView)findViewById(R.id.copyright);
+
        copyright.setText( "Ramesh Gali"+"\u00a9" );
         copyright.setTextColor(Color.BLACK);
+
+
+
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,8 +97,9 @@ public class MainActivity extends AppCompatActivity {
         b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("hello logs","Im in fixtures");
-                startActivity(new Intent(MainActivity.this, FixturesActivity.class));
+                Intent i = new Intent(getApplicationContext(), FixturesActivity.class);
+                i.putExtra("epuzzle", URL);
+                startActivity(i);
             }
         });
         b3.setOnClickListener(new View.OnClickListener() {
@@ -211,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static ArrayList<String> getAllDates() throws Exception{
-        Document doc = Jsoup.connect("http://www.goal.com/en-us/fixtures/team/real-madrid/2016?ICID=TP_NMW_FT_1").get();
+        Document doc = Jsoup.connect(URL).get();
         //Element h1 = doc.body().getElementsByTag("th").get(0);
         ArrayList<String> dates= new ArrayList<>();
         Elements h111 = doc.body().getElementsByClass("comp-date");
@@ -224,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static ArrayList<String> getAllTimes() throws Exception{
-        Document doc = Jsoup.connect("http://www.goal.com/en-us/fixtures/team/real-madrid/2016?ICID=TP_NMW_FT_1").get();
+        Document doc = Jsoup.connect(URL).get();
         //Element h1 = doc.body().getElementsByTag("th").get(0);
         ArrayList<String> dates= new ArrayList<>();
         Elements h111 = doc.body().getElementsByClass("status");
@@ -238,11 +258,11 @@ public class MainActivity extends AppCompatActivity {
         return dates;
     }
     public static String getAllOpponents() throws Exception{
-        Document doc = Jsoup.connect("http://www.goal.com/en-us/fixtures/team/real-madrid/2016?ICID=TP_NMW_FT_1").get();
+        Document doc = Jsoup.connect(URL).get();
         ArrayList<String> dates= new ArrayList<>();
         Elements h11 = doc.body().getElementsByClass("team");
         for(int i=1;i<h11.size();i=i+2){
-            if(h11.get(i).text().equals("Real Madrid")){
+            if(h11.get(i).text().equals("Real Madrid")||h11.get(i).text().contains("Barcelona")||h11.get(i).text().contains("Madrid")||h11.get(i).text().contains("Liverpool")){
                 String s=h11.get(i-1).text()+" (A)";
                 dates.add(s);
             }else {

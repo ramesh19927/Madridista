@@ -1,6 +1,7 @@
 package com.example.ramesh_pc.madridista;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,8 +23,13 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 
 public class FixturesActivity extends AppCompatActivity {
-  static  String URL="http://www.goal.com/en-us/fixtures/team/real-madrid/2016?ICID=TP_NMW_FT_1";
-  static  String url="http://www.soccer24.com/team/real-madrid/W8mj7MDD/";
+  static  String URL="";
+  static  String url="";
+    /*
+    http://www.soccer24.com/team/barcelona/SKbpVP5K/
+    http://www.soccer24.com/team/atl-madrid/jaarqpLQ/
+    http://www.soccer24.com/team/liverpool/lId4TMwf/
+     */
     private static ProgressDialog dialog;
 
     /** progress dialog to show user that the backup is processing. */
@@ -32,7 +38,23 @@ public class FixturesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fixtures);
-      new fixtures().execute();
+        Intent intent = getIntent();
+
+        URL = intent.getExtras().getString("epuzzle");
+
+        if(URL.contains("barcelona")){
+           url="http://www.soccer24.com/team/barcelona/SKbpVP5K/";
+        } if(URL.contains("liverpool")){
+            url="http://www.soccer24.com/team/liverpool/lId4TMwf/";
+
+        } if(URL.contains("atl%C3%A9tico-madrid")){
+           url="http://www.soccer24.com/team/atl-madrid/jaarqpLQ/";
+
+        } if(URL.contains("real-madrid")){
+           url="http://www.soccer24.com/team/real-madrid/W8mj7MDD/";
+
+        }
+        new fixtures().execute();
     }
 
 
@@ -138,7 +160,7 @@ public class FixturesActivity extends AppCompatActivity {
         ArrayList<String> dates= new ArrayList<>();
         Elements h11 = doc.body().getElementsByClass("team");
         for(int i=1;i<h11.size();i=i+2){
-            if(h11.get(i).text().equals("Real Madrid")){
+            if(h11.get(i).text().equals("Real Madrid")||h11.get(i).text().contains("Barcelona")||h11.get(i).text().contains("Madrid")||h11.get(i).text().contains("Liverpool")){
                 String s=h11.get(i-1).text()+" (A)";
                 dates.add(s);
             }else {

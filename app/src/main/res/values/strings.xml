@@ -4,4 +4,5 @@
     <string name="title_activity_updates">Updates</string>
     <string name="title_activity_fixtures">FixturesActivity</string>
     <string name="title_activity_table">TableActivity</string>
+    <string name="title_activity_select">SelectActivity</string>
 </resources>
