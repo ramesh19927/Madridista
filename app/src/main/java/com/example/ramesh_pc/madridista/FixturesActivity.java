@@ -160,7 +160,7 @@ public class FixturesActivity extends AppCompatActivity {
         ArrayList<String> dates= new ArrayList<>();
         Elements h11 = doc.body().getElementsByClass("team");
         for(int i=1;i<h11.size();i=i+2){
-            if(h11.get(i).text().equals("Real Madrid")||h11.get(i).text().contains("Barcelona")||h11.get(i).text().contains("Madrid")||h11.get(i).text().contains("Liverpool")){
+            if(h11.get(i).text().equals("Real Madrid")||h11.get(i).text().contains("Barcelona")||h11.get(i).text().contains("Atl%C3%A9tico")||h11.get(i).text().contains("Liverpool")){
                 String s=h11.get(i-1).text()+" (A)";
                 dates.add(s);
             }else {

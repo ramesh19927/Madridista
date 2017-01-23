@@ -1,7 +1,10 @@
 package com.example.ramesh_pc.madridista;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -18,11 +21,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 public class MainActivity extends AppCompatActivity {
@@ -33,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     TextView textView;
     TextView textView1;
     TextView copyright;
+   // static boolean shallI=true;
     static Calendar c= Calendar.getInstance();
 
     static  int currsec=c.get(Calendar.SECOND);
@@ -58,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Intent intent = getIntent();
+        /*
+        ezpuzzle:: This is the key to get the Team that is selected from the SelectActivity
+
+         */
          URL = intent.getExtras().getString("epuzzle");
 imageView=(ImageView)findViewById(R.id.imageView);
         if(URL.contains("barcelona")){
@@ -79,7 +89,13 @@ imageView=(ImageView)findViewById(R.id.imageView);
            // spinner.setVisibility(View.GONE);
          textView1= (TextView) findViewById(R.id.textview);
         textView=(TextView)findViewById(R.id.textView);
-       new ProgressTask().execute();
+
+      if(isNetworkAvailable()) {
+          new ProgressTask().execute();
+      }else{
+          Toast.makeText(getApplicationContext(),"Please check your internet connection!!",Toast.LENGTH_LONG).show();
+      }
+
       copyright=(TextView)findViewById(R.id.copyright);
 
        copyright.setText( "Ramesh Gali"+"\u00a9" );
@@ -90,22 +106,39 @@ imageView=(ImageView)findViewById(R.id.imageView);
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, Updates.class));
+                if(isNetworkAvailable()) {
+                    startActivity(new Intent(MainActivity.this, Updates.class));
+                }else{
+                    Toast.makeText(getApplicationContext(),"Please check your internet connection!!",Toast.LENGTH_LONG).show();
+                }
+               // startActivity(new Intent(MainActivity.this, Updates.class));
             }
         });
 
         b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), FixturesActivity.class);
-                i.putExtra("epuzzle", URL);
-                startActivity(i);
+
+                if(isNetworkAvailable()) {
+                    Intent i = new Intent(getApplicationContext(), FixturesActivity.class);
+                    i.putExtra("epuzzle", URL);
+                    startActivity(i);
+                }else{
+                    Toast.makeText(getApplicationContext(),"Please check your internet connection!!",Toast.LENGTH_LONG).show();
+                }
+
             }
         });
         b3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, TableActivity.class));
+                 if(isNetworkAvailable()) {
+                     startActivity(new Intent(MainActivity.this, TableActivity.class));
+
+
+                 }else{
+                    Toast.makeText(getApplicationContext(),"Please check your internet connection!!",Toast.LENGTH_LONG).show();
+                }
 
             }
         });
@@ -133,6 +166,12 @@ imageView=(ImageView)findViewById(R.id.imageView);
         return super.onOptionsItemSelected(item);
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
     ////////////////////////////////////////////////////////
     private class ProgressTask extends AsyncTask<Void,Void,Object> {
         String stringres="";
@@ -143,6 +182,7 @@ imageView=(ImageView)findViewById(R.id.imageView);
         int min;
         int hour;
         int result;
+        ArrayList<Integer> timelist= new ArrayList<>();
 
         @Override
         protected Object doInBackground(Void... arg0) {
@@ -157,8 +197,8 @@ imageView=(ImageView)findViewById(R.id.imageView);
                     s=getAllTimes().get(0).replaceAll("\\s", "").replaceAll(":", "").replaceAll("A", "").replaceAll("P", "").replaceAll("M", "");
                     l=Integer.valueOf(s);
                 }
-                ArrayList<Integer> timelist= new ArrayList<>(TimeLeft(getAllDates().get(0)));
-
+               // ArrayList<Integer> timelist= new ArrayList<>(TimeLeft(getAllDates().get(0)));
+                timelist.addAll(TimeLeft(getAllDates().get(0)));
 
                 Calendar thatDay = Calendar.getInstance();
                 thatDay.set(Calendar.MINUTE,l%100);
@@ -204,7 +244,8 @@ imageView=(ImageView)findViewById(R.id.imageView);
                 @Override
                 public void onFinish() {
                     //textView.setText(DateUtils.formatElapsedTime(0));
-                    textView.setText("Now Playing!!");
+
+                    textView.setText("Now playing!!");
                 }
 
                 @Override
