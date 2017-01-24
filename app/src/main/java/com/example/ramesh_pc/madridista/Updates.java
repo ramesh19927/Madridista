@@ -18,10 +18,13 @@ import android.widget.TextView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 
 public class Updates extends AppCompatActivity {
  static String URL1="http://www.marca.com/en";
@@ -38,6 +41,8 @@ public class Updates extends AppCompatActivity {
     }
 
 
+
+
     private class news extends AsyncTask<Void,Void,ArrayList<String>> {
         Object object= new Object();
         ArrayList<String> list= new ArrayList<>();
@@ -49,14 +54,29 @@ public class Updates extends AppCompatActivity {
         @Override
         protected ArrayList<String> doInBackground(Void... arg0) {
           try {
-              Document doc = Jsoup.connect(URL1).get();
-              Elements h1 = doc.body().getElementsByClass("mod-title");
-              for(int i=0;i<h1.size();i++){
-                  list.add(h1.get(i).text());
+              Document doc = Jsoup.connect("http://www.marca.com/en").get();
+              ArrayList<String> realmadrid= new ArrayList<>();
+
+              for(Element link : doc.select("a")) {
+                  if(link.attr("href").contains("barcelona"))
+                      realmadrid.add(link.attr("href"));
+                  if(link.attr("href").contains("real-madrid"))
+                      realmadrid.add(link.attr("href"));
               }
-
-
-          }catch (Exception e){
+              HashSet<String> finalreal= new HashSet<>();
+               for(int i=3;i<realmadrid.size();i++){
+                  Document realdoc=Jsoup.connect(realmadrid.get(i)).get();
+                  Elements realstrings= realdoc.body().getElementsByTag("p");
+                  String realstring ="";
+                  for(Element el:realstrings){
+                      if(!el.text().contains("Unidad Editorial Información Deportiva")&&!el.text().contains("Follow us"))
+                          realstring=realstring+System.lineSeparator()+el.text();
+                  }
+                  //System.out.println(realstring);
+                  finalreal.add(realstring);
+              }
+              list.addAll(finalreal);
+           }catch (Exception e){
               e.printStackTrace();
           }
 
@@ -77,7 +97,7 @@ public class Updates extends AppCompatActivity {
                 final TextView rowTextView = new TextView(getApplicationContext());
 
                 // set some properties of rowTextView or something
-                rowTextView.setText(i+1+".  "+list.get(i));
+                rowTextView.setText(" [ "+ (i+1) +" ] "+System.lineSeparator()+list.get(i)+System.lineSeparator());
 
                 rowTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                 rowTextView.setTextColor(Color.BLACK);
