@@ -95,17 +95,13 @@ public class TableActivity extends AppCompatActivity {
     public static ArrayList<String> getMSNvsBBC(String URL) throws  Exception{
         Document doc = Jsoup.connect(URL).get();
         Element h=doc.body();
-        //Elements h1 = doc.body().getElementsByClass("").tagName("goles");
-        ArrayList<String> list= new ArrayList<>();
-        //for(int i=0;i<h1.size();i++){
-        //list.add(h1.get(i).text());
-        //}
-        Elements h11 = doc.body().getElementsByTag("tr");//.get(0).getElementsByClass("player");
+         ArrayList<String> list= new ArrayList<>();
+         Elements h11 = doc.body().getElementsByTag("tr");
         for(Element el:h11)
-        {//if(el.getElementsByTag("span").size()>1)
+        {
+
             if(el.text().contains("All Competitions"))
             {
-                //System.out.println("--Messi--Suarez--Neymar--");
                 String[] parts=el.text().split("All Competitions");
                 String s1=parts[0];
                 String s2=parts[1];
@@ -171,11 +167,9 @@ public class TableActivity extends AppCompatActivity {
             linearLayout.addView(tit);
             final int Ram = 4;
             for (int g = 0; g < Ram; g++) {
-                final TextView rowTextram = new TextView(getApplicationContext());  // set some properties of rowTextView or something
+                final TextView rowTextram = new TextView(getApplicationContext());// set some properties of rowTextView or something
 
                 rowTextram.setText(list.get(2).get(g));
-
-
                 rowTextram.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                 rowTextram.setTextColor(Color.BLACK);
 
@@ -199,10 +193,8 @@ public class TableActivity extends AppCompatActivity {
 
                 rowText.setText(r + 1 + " ---- " + list.get(1).get(r));
 
-
                 rowText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                 rowText.setTextColor(Color.BLACK);
-
                 // add the textview to the linearlayout
                 linearLayout.addView(rowText);
 
