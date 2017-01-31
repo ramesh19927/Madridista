@@ -21,6 +21,12 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 
+
+/*
+pulls the data from various web pages and updates the textviews dynamically.
+Scrollview is enabled for the textviews
+ */
+
 public class TableActivity extends AppCompatActivity {
    static String URL="http://www.marca.com/en/stats/football/laliga/league-table.html?cid=MENUMIGA35903&s_kw=table";
     static String URL1="http://www.marca.com/en/stats/football/laliga/2016_17/ranking.html";

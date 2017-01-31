@@ -26,9 +26,7 @@ public class FixturesActivity extends AppCompatActivity {
   static  String URL="";
   static  String url="";
     /*
-    http://www.soccer24.com/team/barcelona/SKbpVP5K/
-    http://www.soccer24.com/team/atl-madrid/jaarqpLQ/
-    http://www.soccer24.com/team/liverpool/lId4TMwf/
+    Pulls the Data from various web pages and updates the text views
      */
     private static ProgressDialog dialog;
 
