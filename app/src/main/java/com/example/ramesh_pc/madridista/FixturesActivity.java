@@ -76,7 +76,7 @@ public class FixturesActivity extends AppCompatActivity {
                 list.add(dates);
                 list.add(times);
                 list.add(players);
-            }catch (Exception e){
+            }catch (Exception e){//
                 e.printStackTrace();
             }
             return list;
