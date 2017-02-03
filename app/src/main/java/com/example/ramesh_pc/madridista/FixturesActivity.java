@@ -125,7 +125,7 @@ public class FixturesActivity extends AppCompatActivity {
                 final TextView rowTextView = new TextView(getApplicationContext());
 
                 // set some properties of rowTextView or something
-                rowTextView.setText(i+1 +" :: "+list.get(1).get(i)+" : "+list.get(2)+" : "+list.get(0).get(i));
+                rowTextView.setText(i+1 +" :: "+list.get(1).get(i)+" : "+list.get(2).get(i)+" : "+list.get(0).get(i));
 
                 rowTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                 rowTextView.setTextColor(Color.BLACK);
