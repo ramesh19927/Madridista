@@ -40,10 +40,7 @@ public class Updates extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_updates);
         //View linearLayout =  findViewById(R.id.info);
-
         new news().execute();
-
-
     }
 
 
@@ -77,8 +74,7 @@ public class Updates extends AppCompatActivity {
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                    }
-                    catch(IndexOutOfBoundsException e){
+                    } catch (IndexOutOfBoundsException e) {
                         runThread(list);
                     }
                 }
@@ -133,10 +129,10 @@ public class Updates extends AppCompatActivity {
         @Override
         protected void onPostExecute(ArrayList<String> list) {
             pdi.dismiss();
-             runThread(list);
+            // runThread(list);
 
 
-           /* final int N = list.size(); // total number of textviews to add
+            final int N = list.size(); // total number of textviews to add
             LinearLayout linearLayout = (LinearLayout) findViewById(R.id.info);
             final TextView[] myTextViews = new TextView[N]; // create an empty array;
 
@@ -154,7 +150,7 @@ public class Updates extends AppCompatActivity {
                 linearLayout.addView(rowTextView);
 
                 // save a reference to the textview for later
-                myTextViews[i] = rowTextView;*/
+                myTextViews[i] = rowTextView;
             }
 
 
@@ -162,5 +158,6 @@ public class Updates extends AppCompatActivity {
 
 
     }
+}
 
 

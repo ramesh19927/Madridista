@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.sql.Time;
@@ -135,7 +136,6 @@ imageView=(ImageView)findViewById(R.id.imageView);
                  if(isNetworkAvailable()) {
                      startActivity(new Intent(MainActivity.this, TableActivity.class));
 
-
                  }else{
                     Toast.makeText(getApplicationContext(),"Please check your internet connection!!",Toast.LENGTH_LONG).show();
                 }
@@ -187,12 +187,14 @@ imageView=(ImageView)findViewById(R.id.imageView);
         @Override
         protected Object doInBackground(Void... arg0) {
             try{
-            stringres =getAllOpponents();
+            stringres =getAllOpponents().get(0); Log.i("new",stringres);
                  object.setName(stringres);
                 if(getAllTimes().get(0).contains("PM")){
                     s=getAllTimes().get(0).replaceAll("\\s", "").replaceAll(":", "").replaceAll("A", "").replaceAll("P", "").replaceAll("M", "");
                     //System.out.println(s);
+                    Log.i("new",s);
                     l=Integer.valueOf(s)+1200;
+                    Log.i("new",stringres);
                 }else if(getAllTimes().get(0).contains("AM")){
                     s=getAllTimes().get(0).replaceAll("\\s", "").replaceAll(":", "").replaceAll("A", "").replaceAll("P", "").replaceAll("M", "");
                     l=Integer.valueOf(s);
@@ -243,9 +245,8 @@ imageView=(ImageView)findViewById(R.id.imageView);
             mCountDownTimer = new CountDownTimer(mInitialTime, 1000) {
                 @Override
                 public void onFinish() {
-                    //textView.setText(DateUtils.formatElapsedTime(0));
-
-                    textView.setText("Now playing!!");
+                    textView.setText("Postponed!");
+                 new ProgressTaskover().execute();
                 }
 
                 @Override
@@ -261,7 +262,108 @@ imageView=(ImageView)findViewById(R.id.imageView);
 
                         millisUntilFinished %= DateUtils.DAY_IN_MILLIS;
                     }
+                    time.append(DateUtils.formatElapsedTime(Math.round(millisUntilFinished / 1000d)));
+                    textView.setText(time.toString());
+                }
+            }.start();
 
+            textView1.setText(stringres);
+        }
+    }
+    /*
+    *    DIRTY CODE!!!!
+    *
+    *
+    * */
+    private class ProgressTaskover extends AsyncTask<Void,Void,Object> {
+        String stringres="";
+        Object object= new Object();
+        ArrayList<Integer> list= new ArrayList<>();
+        int l=0;
+        String s;
+        int min;
+        int hour;
+        int result;
+        ArrayList<Integer> timelist= new ArrayList<>();
+
+        @Override
+        protected Object doInBackground(Void... arg0) {
+            try{
+                stringres =getAllOpponents().get(1); Log.i("new",stringres);
+                object.setName(stringres);
+                if(getAllTimes().get(1).contains("PM")){
+                    s=getAllTimes().get(1).replaceAll("\\s", "").replaceAll(":", "").replaceAll("A", "").replaceAll("P", "").replaceAll("M", "");
+                    //System.out.println(s);
+                    Log.i("new",s);
+                    l=Integer.valueOf(s)+1200;
+                    Log.i("new",stringres);
+                }else if(getAllTimes().get(1).contains("AM")){
+                    s=getAllTimes().get(1).replaceAll("\\s", "").replaceAll(":", "").replaceAll("A", "").replaceAll("P", "").replaceAll("M", "");
+                    l=Integer.valueOf(s);
+                }
+                // ArrayList<Integer> timelist= new ArrayList<>(TimeLeft(getAllDates().get(0)));
+                timelist.addAll(TimeLeft(getAllDates().get(1)));
+
+                Calendar thatDay = Calendar.getInstance();
+                thatDay.set(Calendar.MINUTE,l%100);
+                thatDay.set(Calendar.HOUR_OF_DAY,l/100);
+                thatDay.set(Calendar.DAY_OF_MONTH,timelist.get(0));
+                thatDay.set(Calendar.MONTH,timelist.get(1)-1); // 0-11 so 1 less
+                thatDay.set(Calendar.YEAR, timelist.get(2));
+
+                Calendar today = Calendar.getInstance();
+                long diff =  thatDay.getTimeInMillis() - today.getTimeInMillis();
+                long diffSec = diff / 1000;
+
+                long days = diffSec / SECONDS_IN_A_DAY;
+                long secondsDay = diffSec % SECONDS_IN_A_DAY;
+                long seconds = secondsDay % 60;
+                long minutes = (secondsDay / 60) % 60;
+                long hours = (secondsDay / 3600); // % 24 not needed
+
+                list.add((int)days);list.add((int)seconds);list.add((int) minutes);list.add((int)hours);
+                object.setId(list);
+
+                Log.i("logged",list.get(0)+" "+list.get(1)+" "+list.get(2)+" "+list.get(3)+" ");
+
+
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            return object;
+        }
+
+        @Override
+        protected void onPostExecute(Object object) {
+            //spinner.setVisibility(View.GONE);
+            list.addAll(object.getTime());
+            long mInitialTime = DateUtils.DAY_IN_MILLIS * list.get(0)+
+                    DateUtils.HOUR_IN_MILLIS * list.get(3) +
+                    DateUtils.MINUTE_IN_MILLIS * list.get(2)+
+                    DateUtils.SECOND_IN_MILLIS * list.get(1);
+
+            stringres=object.getName();
+            mCountDownTimer = new CountDownTimer(mInitialTime, 1000) {
+                @Override
+                public void onFinish() {
+                    textView.setText("NOW PLAYING!!");
+
+                }
+
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    time.setLength(0);
+                    // Use days if appropriate
+                    if(millisUntilFinished > DateUtils.DAY_IN_MILLIS) {
+                        long count = millisUntilFinished / DateUtils.DAY_IN_MILLIS;
+                        if(count > 1)
+                            time.append(count).append(" days ");
+                        else
+                            time.append(count).append(" day ");
+
+                        millisUntilFinished %= DateUtils.DAY_IN_MILLIS;
+                    }
                     time.append(DateUtils.formatElapsedTime(Math.round(millisUntilFinished / 1000d)));
                     textView.setText(time.toString());
                 }
@@ -298,7 +400,7 @@ imageView=(ImageView)findViewById(R.id.imageView);
 
         return dates;
     }
-    public static String getAllOpponents() throws Exception{
+    public static ArrayList<String> getAllOpponents() throws Exception{
         Document doc = Jsoup.connect(URL).get();
         ArrayList<String> dates= new ArrayList<>();
         Elements h11 = doc.body().getElementsByClass("team");
@@ -311,9 +413,19 @@ imageView=(ImageView)findViewById(R.id.imageView);
                 dates.add(s);
             }
         }
-        return dates.get(0);
+        return dates;
     }
 
+    public static ArrayList<String> getschedule(String URL) throws Exception{
+        Document doc = Jsoup.connect("http://www.realmadrid.com/en").get();
+        Elements h1 = doc.body().getElementsByClass("m_schecdule_header");
+        // Elements h11 = doc.body().getElementsByClass("destacado");
+        ArrayList<String> list= new ArrayList<>();
+        for(Element el: h1){
+            list.add(el.text());
+        }
+        return list;
+    }
     public static ArrayList<Integer> TimeLeft(String s){
         s.replaceAll("\\s", "");
 

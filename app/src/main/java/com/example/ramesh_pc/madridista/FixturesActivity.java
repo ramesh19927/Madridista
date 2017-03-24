@@ -139,6 +139,7 @@ public class FixturesActivity extends AppCompatActivity {
         }
     }
 
+
     public static  ArrayList<String> InjuredPlayersList(String URL) throws  Exception{
         Document doc = Jsoup.connect(URL).get();
         Element h=doc.body();
