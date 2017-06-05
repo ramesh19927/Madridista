@@ -94,7 +94,7 @@ imageView=(ImageView)findViewById(R.id.imageView);
       if(isNetworkAvailable()) {
           new ProgressTask().execute();
       }else{
-          Toast.makeText(getApplicationContext(),"No internet connection!!",Toast.LENGTH_LONG).show();
+          Toast.makeText(getApplicationContext(),"There is no internet connection...Please check the connection!!",Toast.LENGTH_LONG).show();
       }
 
       copyright=(TextView)findViewById(R.id.copyright);
@@ -433,7 +433,7 @@ imageView=(ImageView)findViewById(R.id.imageView);
         //String part=parts[0];
         String part1=parts[1];
         String part2=parts[2];
-        matchYear=(int)Integer.parseInt(part2.replaceAll("\\s+",""));
+        matchYear=Integer.parseInt(part2.replaceAll("\\s+",""));
         if(part1.contains("January")){
             matchMonth=1;
         }if(part1.contains("February")){
@@ -459,7 +459,7 @@ imageView=(ImageView)findViewById(R.id.imageView);
         }if(part1.contains("December")){
             matchMonth=12;
         }
-        StringBuffer buf= new StringBuffer();
+        StringBuilder buf= new StringBuilder();
         for(int i=0;i<part1.length();i++){
             if(part1.charAt(i)=='0'||part1.charAt(i)=='2'||part1.charAt(i)=='3'||
                     part1.charAt(i)=='4'||part1.charAt(i)=='5'||part1.charAt(i)=='6'||
