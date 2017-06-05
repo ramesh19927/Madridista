@@ -94,7 +94,7 @@ imageView=(ImageView)findViewById(R.id.imageView);
       if(isNetworkAvailable()) {
           new ProgressTask().execute();
       }else{
-          Toast.makeText(getApplicationContext(),"Please check your internet connection!!",Toast.LENGTH_LONG).show();
+          Toast.makeText(getApplicationContext(),"No internet connection!!",Toast.LENGTH_LONG).show();
       }
 
       copyright=(TextView)findViewById(R.id.copyright);
